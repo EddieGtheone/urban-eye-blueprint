@@ -1,0 +1,10 @@
+# Retired entry paths — force-redirect to the Blueprint (must precede any rewrites)
+/review.html   https://blueprint.urbaneyebybrooks.com   301!
+/review        https://blueprint.urbaneyebybrooks.com   301!
+/blueprint     https://blueprint.urbaneyebybrooks.com   301!
+
+# Pretty URLs for live pages
+/contact   /contact.html   200
+/thanks    /thanks.html    200
+/privacy   /privacy.html   200
+/terms     /terms.html     200

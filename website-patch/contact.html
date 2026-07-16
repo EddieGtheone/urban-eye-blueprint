@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Start a website redesign, digital commerce audit or implementation project with Urban Eye by Brooks & Co.">
+  <meta property="og:title" content="Start a Project — Urban Eye by Brooks & Co.">
+  <meta property="og:description" content="Tell us what the website should help your customer do.">
+  <meta property="og:image" content="assets/urban-eye-og-card.png">
+  <meta name="theme-color" content="#0b0c0e">
+  <title>Start a Project — Urban Eye by Brooks & Co.</title>
+  <link rel="icon" type="image/png" href="assets/urban-eye-mark-black.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="inner-page contact-page">
+<a class="skip-link" href="#main">Skip to form</a>
+<header class="site-header solid" data-header>
+  <div class="shell nav-shell">
+    <a class="brand" href="index.html"><img src="assets/urban-eye-logo-white.png" alt="Urban Eye by Brooks & Co."></a>
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="primary-menu" data-menu-button><span></span><span></span><span class="sr-only">Open menu</span></button>
+    <nav class="primary-menu" id="primary-menu" data-menu>
+      <a href="index.html#services">Services</a><a href="https://blueprint.urbaneyebybrooks.com">Blueprint</a><a href="index.html#work">Work</a><a href="index.html#story">About</a>
+      <a class="nav-cta" href="#project-form">Start a Project</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="contact-hero">
+    <div class="shell contact-hero-grid">
+      <div>
+        <p class="eyebrow">Project inquiry</p>
+        <h1>What should the website help your customer do?</h1>
+        <p>Share the current problem, the desired outcome and the level of complexity. Urban Eye will recommend the right first step instead of forcing every business into the same package.</p>
+      </div>
+      <div class="contact-principle">
+        <img src="assets/urban-eye-mark-white.png" alt="">
+        <p>Start with an affordable service.<br>Prove the value.<br>Scale the work when it makes sense.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-section section">
+    <div class="shell contact-layout">
+      <aside class="contact-aside">
+        <p class="kicker">What happens next</p>
+        <ol>
+          <li><span>01</span><div><strong>Fit review</strong><p>We review the business problem, timing, scope and decision process.</p></div></li>
+          <li><span>02</span><div><strong>Recommended entry point</strong><p>That may be the Website Review, Digital Commerce Audit, concept sprint or direct implementation.</p></div></li>
+          <li><span>03</span><div><strong>Working conversation</strong><p>Qualified opportunities move to a focused discovery call and written next steps.</p></div></li>
+        </ol>
+        <div class="contact-direct">
+          <strong>Prefer direct contact?</strong>
+          <a href="mailto:hello@urbaneyebybrooks.com">General: hello@urbaneyebybrooks.com</a>
+          <a href="mailto:projects@urbaneyebybrooks.com">Projects: projects@urbaneyebybrooks.com</a>
+          <a href="mailto:quotes@urbaneyebybrooks.com">Quotes: quotes@urbaneyebybrooks.com</a>
+          <a href="tel:+19728919169">Phone: 972-891-9169</a>
+          <span>Dallas–Fort Worth, Texas</span>
+          <div class="contact-social">
+            <a href="https://www.linkedin.com/company/urban-eye-by-brooks-co/" target="_blank" rel="noopener" aria-label="Urban Eye on LinkedIn">LinkedIn</a>
+            <a href="https://www.instagram.com/urbaneyebybrooks" target="_blank" rel="noopener" aria-label="Urban Eye on Instagram">Instagram</a>
+            <a href="https://www.facebook.com/share/1DuTsbtpDF/" target="_blank" rel="noopener" aria-label="Urban Eye on Facebook">Facebook</a>
+          </div>
+        </div>
+      </aside>
+
+      <div class="form-card">
+        <div class="form-heading">
+          <p class="kicker">Tell us about the project</p>
+          <h2>Start with enough context to make the first conversation useful.</h2>
+          <p>Fields marked * are required.</p>
+        </div>
+
+        <form id="project-form" name="urban-eye-project-inquiry" method="POST" action="/thanks.html" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+          <input type="hidden" name="form-name" value="urban-eye-project-inquiry">
+          <input type="hidden" name="routing_email" value="projects@urbaneyebybrooks.com">
+          <p class="honeypot"><label>Do not fill this out: <input name="bot-field"></label></p>
+
+          <fieldset>
+            <legend><span>01</span>Contact</legend>
+            <div class="form-grid two">
+              <div class="field"><label for="first-name">First name *</label><input id="first-name" name="first_name" autocomplete="given-name" required></div>
+              <div class="field"><label for="last-name">Last name *</label><input id="last-name" name="last_name" autocomplete="family-name" required></div>
+              <div class="field"><label for="email">Work email *</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+              <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" type="tel" autocomplete="tel"></div>
+              <div class="field"><label for="company">Company *</label><input id="company" name="company" autocomplete="organization" required></div>
+              <div class="field"><label for="website">Current website</label><input id="website" name="website" type="url" placeholder="https://"></div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend><span>02</span>Project</legend>
+            <div class="form-grid two">
+              <div class="field">
+                <label for="project-type">Best description *</label>
+                <select id="project-type" name="project_type" required>
+                  <option value="">Select one</option>
+                  <option value="Business Modernization Blueprint Review">Business Modernization Blueprint Review</option>
+                  <option value="Website Redesign Review">Website Redesign Review</option>
+                  <option value="B2B Digital Commerce Audit">B2B Digital Commerce Audit</option>
+                  <option value="Homepage Concept Sprint">Homepage Concept Sprint</option>
+                  <option value="Product or Service Page Concept">Product or Service Page Concept</option>
+                  <option value="Small-Business Website Redesign">Small-Business Website Redesign</option>
+                  <option value="Growth Website Redesign">Growth Website Redesign</option>
+                  <option value="Enterprise Digital Experience">Enterprise Digital Experience</option>
+                  <option value="Digital Growth Support">Digital Growth Support</option>
+                  <option value="Not sure">Not sure — recommend a starting point</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="company-size">Company stage</label>
+                <select id="company-size" name="company_stage">
+                  <option value="">Select one</option>
+                  <option>Owner-led / small business</option>
+                  <option>Established growth company</option>
+                  <option>Mid-market organization</option>
+                  <option>Enterprise / multi-brand</option>
+                  <option>Startup / pre-launch</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="budget">Planning budget *</label>
+                <select id="budget" name="budget" required>
+                  <option value="">Select one</option>
+                  <option>Under $2,500</option>
+                  <option>$2,500–$5,000</option>
+                  <option>$5,000–$12,000</option>
+                  <option>$12,000–$30,000</option>
+                  <option>$30,000–$75,000</option>
+                  <option>$75,000+</option>
+                  <option>Not established yet</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="timeline">Desired start *</label>
+                <select id="timeline" name="timeline" required>
+                  <option value="">Select one</option>
+                  <option>Immediately</option>
+                  <option>Within 30 days</option>
+                  <option>Within 60–90 days</option>
+                  <option>Within 3–6 months</option>
+                  <option>Researching for later</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="platform">Current platform or systems</label>
+                <input id="platform" name="platform" placeholder="Wix, WordPress, Shopify, custom, ERP/PIM, etc.">
+              </div>
+              <div class="field">
+                <label for="decision">Decision status</label>
+                <select id="decision" name="decision_status">
+                  <option value="">Select one</option>
+                  <option>I am the decision-maker</option>
+                  <option>I am part of the decision team</option>
+                  <option>I am researching for leadership</option>
+                  <option>I need internal approval</option>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend><span>03</span>Opportunity</legend>
+            <div class="field">
+              <label for="customer-action">What should the website help your customer do? *</label>
+              <textarea id="customer-action" name="desired_customer_action" rows="4" required placeholder="Buy, request a quote, book, register, understand a complex offer, find the right product, visit, call, or something else?"></textarea>
+            </div>
+            <div class="field">
+              <label for="problem">What is not working today? *</label>
+              <textarea id="problem" name="current_problem" rows="6" maxlength="1600" required placeholder="Describe the website, content, customer, workflow or system problem."></textarea>
+              <div class="field-meta"><span>Specific examples help.</span><span data-counter-for="problem">0 / 1600</span></div>
+            </div>
+            <div class="field">
+              <label for="success">What would a successful outcome look like? *</label>
+              <textarea id="success" name="success_outcome" rows="5" maxlength="1200" required></textarea>
+              <div class="field-meta"><span>Focus on the business result.</span><span data-counter-for="success">0 / 1200</span></div>
+            </div>
+            <div class="field">
+              <label for="links">Relevant links or references</label>
+              <textarea id="links" name="links" rows="3" placeholder="Competitors, inspiration, product catalogs, public documents, or campaign references."></textarea>
+            </div>
+          </fieldset>
+
+          <label class="consent">
+            <input type="checkbox" name="consent" value="Yes" required>
+            <span>I agree that Urban Eye by Brooks &amp; Co. may use this information to evaluate and respond to my inquiry. *</span>
+          </label>
+
+          <div class="form-submit">
+            <button class="button button-gold" type="submit">Send Project Inquiry →</button>
+            <p>No mailing list or automated sales sequence. This information is used to respond to the inquiry.</p>
+          </div>
+          <div class="form-status" role="alert" aria-live="polite" data-form-status></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="email-directory-section section" aria-labelledby="email-directory-title">
+    <div class="shell">
+      <div class="section-heading narrow">
+        <p class="kicker">Email directory</p>
+        <h2 id="email-directory-title">Reach the right Urban Eye inbox.</h2>
+        <p>Each address delivers into the same monitored Google Workspace account while keeping conversations organized by purpose.</p>
+      </div>
+      <div class="email-directory-grid">
+        <a class="email-directory-card" href="mailto:edward@urbaneyebybrooks.com"><span>Principal</span><strong>edward@urbaneyebybrooks.com</strong><p>Direct communication with Edward Brooks.</p></a>
+        <a class="email-directory-card" href="mailto:hello@urbaneyebybrooks.com"><span>General</span><strong>hello@urbaneyebybrooks.com</strong><p>General questions, introductions, and partnerships.</p></a>
+        <a class="email-directory-card" href="mailto:projects@urbaneyebybrooks.com"><span>Projects</span><strong>projects@urbaneyebybrooks.com</strong><p>New website, commerce, creative, and technology projects.</p></a>
+        <a class="email-directory-card" href="mailto:quotes@urbaneyebybrooks.com"><span>Quotes</span><strong>quotes@urbaneyebybrooks.com</strong><p>Pricing requests, scope questions, and proposal follow-up.</p></a>
+        <a class="email-directory-card" href="mailto:billing@urbaneyebybrooks.com"><span>Billing</span><strong>billing@urbaneyebybrooks.com</strong><p>Invoices, payment confirmations, and account questions.</p></a>
+        <a class="email-directory-card" href="mailto:support@urbaneyebybrooks.com"><span>Support</span><strong>support@urbaneyebybrooks.com</strong><p>Active-client support, updates, and post-launch assistance.</p></a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell footer-bottom compact"><span>© <span data-year></span> Urban Eye by Brooks &amp; Co.</span><a href="index.html">Return Home</a><span class="gold-text">Vision Made Real.</span></div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
