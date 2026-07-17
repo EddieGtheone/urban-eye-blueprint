@@ -11,6 +11,8 @@ import {
   getVisibleQuestions,
   isAssessmentComplete
 } from "@/lib/assessment";
+import type { AiBlueprintReport } from "@/lib/ai-report";
+import { downloadBlueprintPdf } from "@/lib/pdf-report";
 
 type Stage = "intro" | "assessment" | "capture" | "results";
 
@@ -65,6 +67,9 @@ export default function BlueprintExperience() {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [contact, setContact] = useState<Contact>(initialContact);
   const [result, setResult] = useState<BlueprintResult | null>(null);
+  const [aiReport, setAiReport] = useState<AiBlueprintReport | null>(null);
+  const [aiStatus, setAiStatus] = useState<string>("");
+  const [websiteSnapshotUsed, setWebsiteSnapshotUsed] = useState(false);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -149,7 +154,10 @@ export default function BlueprintExperience() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "The blueprint could not be saved.");
       setSubmissionId(data.id || null);
-      setResult(nextResult);
+      setResult(data.result || nextResult);
+      setAiReport(data.aiReport || null);
+      setAiStatus(data.aiStatus || "");
+      setWebsiteSnapshotUsed(Boolean(data.websiteSnapshotUsed));
       setStage("results");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (caught) {
@@ -159,76 +167,20 @@ export default function BlueprintExperience() {
     }
   }
 
-  async function downloadPdf() {
-    if (!result) return;
-    const { jsPDF } = await import("jspdf");
-    const pdf = new jsPDF({ unit: "pt", format: "letter" });
-    const margin = 54;
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    let y = 56;
-
-    const addText = (text: string, size = 10, weight: "normal" | "bold" = "normal", gap = 6) => {
-      pdf.setFont("helvetica", weight);
-      pdf.setFontSize(size);
-      const lines = pdf.splitTextToSize(text, pageWidth - margin * 2);
-      const lineHeight = size * 1.35;
-      if (y + lines.length * lineHeight > pageHeight - 54) {
-        pdf.addPage();
-        y = 54;
-      }
-      pdf.text(lines, margin, y);
-      y += lines.length * lineHeight + gap;
-    };
-
-    pdf.setFillColor(11, 12, 14);
-    pdf.rect(0, 0, pageWidth, 150, "F");
-    pdf.setTextColor(224, 182, 111);
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(9);
-    pdf.text("URBAN EYE · COMMERCE · CREATIVE · TECHNOLOGY", margin, 46);
-    pdf.setTextColor(255, 255, 255);
-    pdf.setFontSize(24);
-    pdf.text("Your 90-Day", margin, 82);
-    pdf.text("Business Plan", margin, 110);
-    pdf.setFontSize(9);
-    pdf.text(`Prepared for ${contact.company} · ${new Date().toLocaleDateString()}`, margin, 134);
-    y = 184;
-    pdf.setTextColor(11, 12, 14);
-
-    addText(result.profile, 18, "bold", 4);
-    addText(result.profileSummary, 11, "normal", 16);
-    addText(`Priority: ${result.urgency} · Recommended path: ${result.servicePath}`, 11, "bold", 18);
-
-    addText("WHERE TO FOCUS", 9, "bold", 8);
-    pillarOrder.forEach((pillar) => addText(`${PILLAR_LABELS[pillar]}: ${result.scores[pillar]}/100`, 10, "normal", 2));
-    y += 12;
-
-    addText("YOUR NEXT THREE MOVES", 9, "bold", 8);
-    result.priorities.forEach((priority, index) => {
-      addText(`${index + 1}. ${priority.title}`, 12, "bold", 2);
-      addText(priority.detail, 10, "normal", 9);
+  function downloadPdf() {
+    if (!result || !aiReport) return;
+    downloadBlueprintPdf({
+      contact: {
+        name: contact.name,
+        company: contact.company,
+        website: contact.website,
+        role: contact.role,
+        timeline: contact.timeline
+      },
+      result,
+      aiReport,
+      submissionId
     });
-
-    addText("START THIS WEEK", 9, "bold", 6);
-    addText(result.quickWin.title, 12, "bold", 2);
-    addText(result.quickWin.detail, 10, "normal", 14);
-
-    addText("YOUR 30 / 60 / 90 DAY PLAN", 9, "bold", 8);
-    result.roadmap.forEach((phase) => {
-      addText(`${phase.period.toUpperCase()} — ${phase.title}`, 12, "bold", 2);
-      phase.actions.forEach((action) => addText(`• ${action}`, 10, "normal", 3));
-      y += 6;
-    });
-
-    addText("HOW URBAN EYE CAN HELP", 9, "bold", 6);
-    addText(result.implementationOpportunity.title, 12, "bold", 2);
-    addText(result.implementationOpportunity.detail, 10, "normal", 10);
-    addText(result.serviceReason, 10, "bold", 12);
-    addText("Urban Eye designs and builds better websites, product systems, sales workflows, and automation. Review your plan with us at urbaneyebybrooks.com.", 10, "normal", 8);
-    if (submissionId) addText(`Blueprint reference: ${submissionId}`, 8, "normal", 0);
-
-    pdf.save(`urban-eye-blueprint-${contact.company.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.pdf`);
   }
 
   if (stage === "assessment" && currentQuestion) {
@@ -337,10 +289,10 @@ export default function BlueprintExperience() {
       <main className="results-page">
         <header className="results-header">
           <Image src="/assets/urban-eye-logo-white.png" alt="Urban Eye by Brooks & Co." width={190} height={54} priority />
-          <div className="results-actions"><button className="button button-outline" onClick={downloadPdf}>Download Plan</button><a className="button button-gold" href="https://www.urbaneyebybrooks.com/contact.html?project=blueprint">Review My Plan →</a></div>
+          <div className="results-actions"><button className="button button-outline" onClick={downloadPdf} disabled={!aiReport}>Download Detailed PDF</button><a className="button button-gold" href="https://www.urbaneyebybrooks.com/contact.html?project=blueprint">Review My Plan →</a></div>
         </header>
         <section className="result-hero">
-          <p className="eyebrow">Prepared for {contact.company}</p>
+          <p className="eyebrow">Prepared for {contact.company}</p>{aiReport && <span className="ai-report-badge">{aiStatus === "generated" ? "AI-personalized report ready" : "Personalized report ready"}{websiteSnapshotUsed ? " · Website reviewed" : ""}</span>}
           <span className="result-chip">{result.urgency} priority</span>
           <h1>{result.profile}</h1>
           <p>{result.profileSummary}</p>
@@ -349,6 +301,17 @@ export default function BlueprintExperience() {
         <section className="results-content">
           <div className="section-title"><p className="eyebrow dark">Where to focus</p><h2>What needs attention first.</h2></div>
           <ScoreBars scores={result.scores} />
+
+          {aiReport && (
+            <section className="ai-summary-card">
+              <div>
+                <p className="eyebrow dark">Detailed company view</p>
+                <h2>{aiReport.primaryDiagnosis.headline}</h2>
+                <p>{aiReport.executiveSummary}</p>
+              </div>
+              <ul>{aiReport.primaryDiagnosis.evidence.slice(0, 3).map((item) => <li key={item}>{item}</li>)}</ul>
+            </section>
+          )}
 
           <div className="section-title"><p className="eyebrow dark">Your next three moves</p><h2>Do them in this order.</h2></div>
           <div className="priority-grid">
@@ -364,7 +327,7 @@ export default function BlueprintExperience() {
 
           <section className="implementation-card">
             <div><p className="eyebrow">How Urban Eye can help</p><h2>{result.implementationOpportunity.title}</h2><p>{result.implementationOpportunity.detail}</p></div>
-            <div className="implementation-actions"><button className="button button-light" onClick={downloadPdf}>Download Plan</button><a className="button button-gold" href="https://www.urbaneyebybrooks.com/contact.html?project=blueprint">Review My Plan</a></div>
+            <div className="implementation-actions"><button className="button button-light" onClick={downloadPdf} disabled={!aiReport}>Download Detailed PDF</button><a className="button button-gold" href="https://www.urbaneyebybrooks.com/contact.html?project=blueprint">Review My Plan</a></div>
           </section>
           <p className="result-reference">Blueprint reference: {submissionId || "local preview"}</p>
         </section>

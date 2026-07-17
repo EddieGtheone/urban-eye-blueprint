@@ -39,6 +39,14 @@ create table if not exists public.blueprint_submissions (
   ip_hash text,
   user_agent text,
 
+  -- AI-assisted detailed report (see supabase/002_ai_reports.sql for existing installs).
+  ai_report jsonb,
+  ai_status text check (ai_status is null or ai_status in ('generated','fallback_no_key','fallback_error')),
+  ai_model text,
+  ai_generated_at timestamptz,
+  website_snapshot_used boolean not null default false,
+  ai_error text,
+
   owner_id uuid references auth.users(id) on delete set null,
   lead_id uuid,
   quote_submission_id uuid,

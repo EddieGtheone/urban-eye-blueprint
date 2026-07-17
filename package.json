@@ -8,11 +8,13 @@
     "start": "next start",
     "lint": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "sample:pdf": "tsx scripts/generate-sample-pdf.ts"
   },
   "dependencies": {
     "jspdf": "4.2.1",
     "next": "16.2.10",
+    "openai": "^6.47.0",
     "react": "19.2.7",
     "react-dom": "19.2.7"
   },

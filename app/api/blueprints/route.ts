@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHash, randomUUID } from "node:crypto";
 import { Answers, evaluateBlueprint } from "@/lib/assessment";
+import { generateAiBlueprintReport, ReportContact } from "@/lib/ai-report";
+import { getWebsiteSnapshot } from "@/lib/website-snapshot";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -21,10 +24,15 @@ function leadScore(answers: Answers, timeline: string, urgency: string) {
   return Math.min(100, score);
 }
 
-async function saveToSupabase(record: Record<string, unknown>) {
+function supabaseConfig() {
   const url = process.env.SUPABASE_URL?.replace(/\/$/, "");
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !serviceKey) {
+  return url && serviceKey ? { url, serviceKey } : null;
+}
+
+async function saveToSupabase(record: Record<string, unknown>) {
+  const config = supabaseConfig();
+  if (!config) {
     // Demo mode is for local development only. In production, missing
     // credentials must fail loudly rather than silently dropping leads.
     if (process.env.NODE_ENV === "production" && process.env.ALLOW_DEMO_MODE !== "true") {
@@ -34,11 +42,11 @@ async function saveToSupabase(record: Record<string, unknown>) {
     return { saved: false, demo: true };
   }
 
-  const response = await fetch(`${url}/rest/v1/blueprint_submissions`, {
+  const response = await fetch(`${config.url}/rest/v1/blueprint_submissions`, {
     method: "POST",
     headers: {
-      apikey: serviceKey,
-      Authorization: `Bearer ${serviceKey}`,
+      apikey: config.serviceKey,
+      Authorization: `Bearer ${config.serviceKey}`,
       "Content-Type": "application/json",
       Prefer: "return=minimal"
     },
@@ -52,6 +60,33 @@ async function saveToSupabase(record: Record<string, unknown>) {
     throw new Error("We could not save your plan. Please try again.");
   }
   return { saved: true, demo: false };
+}
+
+// The AI report is written in a follow-up PATCH so a slow or failed generation
+// never blocks or loses the lead row that was already inserted above.
+async function saveAiReportToSupabase(id: string, values: Record<string, unknown>) {
+  const config = supabaseConfig();
+  if (!config) return false;
+
+  const response = await fetch(`${config.url}/rest/v1/blueprint_submissions?id=eq.${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    headers: {
+      apikey: config.serviceKey,
+      Authorization: `Bearer ${config.serviceKey}`,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal"
+    },
+    body: JSON.stringify(values),
+    cache: "no-store"
+  });
+
+  if (!response.ok) {
+    const detail = await response.text();
+    // The report still reaches the visitor even if the optional AI migration is not installed yet.
+    console.error("Supabase AI report update failed", response.status, detail);
+    return false;
+  }
+  return true;
 }
 
 export async function POST(request: NextRequest) {
@@ -132,7 +167,34 @@ export async function POST(request: NextRequest) {
 
   try {
     const storage = await saveToSupabase(record);
-    return NextResponse.json({ id, result: canonicalResult, ...storage }, { status: 201 });
+
+    // Expand the approved deterministic result into a detailed report. The
+    // model cannot change the pillar, urgency, scores, or recommended service;
+    // a deterministic fallback is returned if the AI call is unavailable.
+    const reportContact: ReportContact = { name, company, website, role, timeline };
+    const websiteSnapshot = website ? await getWebsiteSnapshot(website) : null;
+    const ai = await generateAiBlueprintReport(reportContact, answers, canonicalResult, websiteSnapshot);
+
+    if (storage.saved) {
+      await saveAiReportToSupabase(id, {
+        ai_report: ai.report,
+        ai_status: ai.status,
+        ai_model: ai.model,
+        ai_generated_at: new Date().toISOString(),
+        website_snapshot_used: ai.websiteSnapshotUsed,
+        ai_error: ai.error || null
+      });
+    }
+
+    return NextResponse.json({
+      id,
+      result: canonicalResult,
+      aiReport: ai.report,
+      aiStatus: ai.status,
+      aiModel: ai.model,
+      websiteSnapshotUsed: ai.websiteSnapshotUsed,
+      ...storage
+    }, { status: 201 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "We could not save your plan. Please try again." }, { status: 503 });
