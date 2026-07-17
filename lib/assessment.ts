@@ -43,165 +43,164 @@ export const QUESTIONS: Question[] = [
   {
     id: "business_model",
     eyebrow: "Your business",
-    title: "How does your business primarily create revenue?",
-    description: "This changes which questions and recommendations matter most.",
+    title: "What does your business sell?",
     options: [
-      { value: "services", label: "Services", help: "Professional, local, creative, technical, or field services" },
-      { value: "products", label: "Products", help: "Physical or digital products sold through a catalog" },
-      { value: "hybrid", label: "Products and services", help: "A mixed model with both offers" },
-      { value: "other", label: "Another model", help: "Membership, nonprofit, marketplace, or still evolving" }
+      { value: "services", label: "Services", help: "Professional, local, creative, technical, or field work" },
+      { value: "products", label: "Products", help: "Physical or digital products" },
+      { value: "hybrid", label: "Products and services", help: "Both" },
+      { value: "other", label: "Something else", help: "Membership, nonprofit, marketplace, or still evolving" }
     ]
   },
   {
     id: "team_size",
     eyebrow: "Your business",
-    title: "What best describes the team operating the business?",
+    title: "How many people work in the business?",
     options: [
-      { value: "solo", label: "Owner-operated" },
+      { value: "solo", label: "Just me" },
       { value: "2-10", label: "2–10 people" },
       { value: "11-50", label: "11–50 people" },
       { value: "51-250", label: "51–250 people" },
-      { value: "250+", label: "More than 250 people" }
+      { value: "250+", label: "250+ people" }
     ]
   },
   {
     id: "primary_goal",
     eyebrow: "Your business",
-    title: "What would make the next 90 days feel meaningfully better?",
+    title: "What matters most in the next 90 days?",
     options: [
-      { value: "look_credible", label: "Present the business more professionally" },
-      { value: "more_leads", label: "Generate and convert more leads" },
-      { value: "sell_online", label: "Make products or services easier to buy" },
-      { value: "launch", label: "Launch or replace a digital experience" },
-      { value: "save_time", label: "Reduce repetitive work and manual handoffs" },
-      { value: "connect_systems", label: "Connect tools, data, and reporting" }
+      { value: "look_credible", label: "Look more professional" },
+      { value: "more_leads", label: "Get more leads" },
+      { value: "sell_online", label: "Make it easier to buy" },
+      { value: "launch", label: "Launch or replace a site or tool" },
+      { value: "save_time", label: "Cut manual work" },
+      { value: "connect_systems", label: "Connect tools and data" }
     ]
   },
   {
     id: "website_state",
     eyebrow: "Website",
-    title: "Which statement is closest to your current website?",
+    title: "Which best describes your website?",
     options: [
-      { value: "strong", label: "It represents us well and supports growth" },
-      { value: "adequate", label: "It works, but feels generic or underdeveloped" },
-      { value: "outdated", label: "It looks outdated or no longer fits the business" },
-      { value: "confusing", label: "Visitors struggle to understand what we offer" },
-      { value: "missing", label: "We do not have a useful website yet" }
+      { value: "strong", label: "It works well and brings in business" },
+      { value: "adequate", label: "It works, but feels basic" },
+      { value: "outdated", label: "It looks outdated" },
+      { value: "confusing", label: "People do not understand what we offer" },
+      { value: "missing", label: "We need a new website" }
     ]
   },
   {
     id: "conversion_path",
     eyebrow: "Website",
-    title: "How clear is the next step for a visitor?",
+    title: "Do visitors know what to do next?",
     options: [
-      { value: "clear", label: "Very clear, measurable, and tested" },
-      { value: "somewhat", label: "There is a CTA, but the path is inconsistent" },
-      { value: "weak", label: "Visitors mostly have to figure it out themselves" },
-      { value: "unknown", label: "We do not know what visitors do after arriving" }
+      { value: "clear", label: "Yes, and we track it" },
+      { value: "somewhat", label: "Usually, but the path is uneven" },
+      { value: "weak", label: "Not really" },
+      { value: "unknown", label: "We do not know" }
     ]
   },
   {
     id: "lead_capture",
     eyebrow: "Sales & marketing",
-    title: "How are new inquiries and leads captured today?",
+    title: "Where do new leads go?",
     options: [
-      { value: "connected", label: "Forms, CRM, source tracking, and ownership are connected" },
-      { value: "forms", label: "Website forms or booking tools capture most inquiries" },
-      { value: "inbox", label: "Email, phone, social messages, or spreadsheets" },
-      { value: "inconsistent", label: "There is no consistent lead-capture process" }
+      { value: "connected", label: "Forms and CRM, with tracking" },
+      { value: "forms", label: "Website forms or booking tools" },
+      { value: "inbox", label: "Email, phone, social, or spreadsheets" },
+      { value: "inconsistent", label: "There is no set process" }
     ]
   },
   {
     id: "follow_up",
     eyebrow: "Sales & marketing",
-    title: "What happens after someone shows interest?",
+    title: "How fast do leads get a reply?",
     options: [
-      { value: "automated", label: "They receive timely, tracked follow-up" },
-      { value: "manual_good", label: "A person follows up reliably" },
-      { value: "manual_slow", label: "Follow-up depends on availability" },
-      { value: "lost", label: "Some opportunities are missed or forgotten" }
+      { value: "automated", label: "Right away, with tracking" },
+      { value: "manual_good", label: "A person replies on time" },
+      { value: "manual_slow", label: "It depends on who is available" },
+      { value: "lost", label: "Some leads get missed" }
     ]
   },
   {
     id: "marketing_system",
     eyebrow: "Sales & marketing",
-    title: "How coordinated are your website, campaigns, email, and sales materials?",
+    title: "Do your website, email, ads, and sales materials say the same thing?",
     options: [
-      { value: "coordinated", label: "They share one strategy, message, and measurement system" },
-      { value: "partial", label: "Some pieces work together" },
-      { value: "fragmented", label: "The message and execution vary by channel" },
-      { value: "inactive", label: "Marketing is mostly inactive or reactive" }
+      { value: "coordinated", label: "Yes" },
+      { value: "partial", label: "Mostly" },
+      { value: "fragmented", label: "Not really" },
+      { value: "inactive", label: "We market only when needed" }
     ]
   },
   {
     id: "systems_state",
     eyebrow: "Technology & AI",
-    title: "How well do your core tools and business data work together?",
+    title: "Do your tools share data?",
     options: [
-      { value: "connected", label: "Core systems share reliable data and workflows" },
-      { value: "some", label: "A few integrations exist, with manual gaps" },
-      { value: "silos", label: "Information lives in separate tools and spreadsheets" },
-      { value: "unclear", label: "We are not sure what should connect" }
+      { value: "connected", label: "Yes, reliably" },
+      { value: "some", label: "Some do; some do not" },
+      { value: "silos", label: "No, data sits in separate tools" },
+      { value: "unclear", label: "We are not sure" }
     ]
   },
   {
     id: "manual_work",
     eyebrow: "Technology & AI",
-    title: "How much time is lost to repetitive work or duplicate data entry?",
+    title: "How much time goes to repeat work?",
     options: [
-      { value: "low", label: "Very little" },
-      { value: "some", label: "A few hours each week" },
-      { value: "high", label: "A meaningful amount every week" },
-      { value: "critical", label: "It actively limits capacity or customer service" }
+      { value: "low", label: "Almost none" },
+      { value: "some", label: "A few hours a week" },
+      { value: "high", label: "Many hours a week" },
+      { value: "critical", label: "It limits growth or service" }
     ]
   },
   {
     id: "sku_count",
     eyebrow: "Commerce",
-    title: "Approximately how many products or SKUs do you manage?",
+    title: "How many products or SKUs do you manage?",
     showWhen: (answers) => ["products", "hybrid"].includes(answers.business_model),
     options: [
       { value: "under_100", label: "Under 100" },
       { value: "100_500", label: "100–500" },
       { value: "500_5000", label: "500–5,000" },
       { value: "5000_20000", label: "5,000–20,000" },
-      { value: "20000_plus", label: "More than 20,000" }
+      { value: "20000_plus", label: "20,000+" }
     ]
   },
   {
     id: "catalog_quality",
     eyebrow: "Commerce",
-    title: "How consistent is your product or catalog information?",
+    title: "How clean is your product data?",
     showWhen: (answers) => ["products", "hybrid"].includes(answers.business_model),
     options: [
-      { value: "clean", label: "Structured, complete, and governed" },
-      { value: "mixed", label: "Quality varies by brand or category" },
-      { value: "messy", label: "Titles, descriptions, attributes, and images are inconsistent" },
-      { value: "vendor_only", label: "We depend heavily on vendor files or PDFs" }
+      { value: "clean", label: "Clean and consistent" },
+      { value: "mixed", label: "Mixed by brand or category" },
+      { value: "messy", label: "Titles, specs, and images are inconsistent" },
+      { value: "vendor_only", label: "We mostly use vendor files or PDFs" }
     ]
   },
   {
     id: "product_discovery",
     eyebrow: "Commerce",
-    title: "Can buyers reliably find and compare the right products?",
+    title: "Can buyers find the right product?",
     showWhen: (answers) => ["products", "hybrid"].includes(answers.business_model),
     options: [
-      { value: "strong", label: "Search, categories, filters, and comparison work well" },
-      { value: "uneven", label: "Some categories work better than others" },
-      { value: "weak", label: "Search or filters frequently produce poor results" },
-      { value: "unknown", label: "We have not tested the buying journey" }
+      { value: "strong", label: "Yes, search and filters work" },
+      { value: "uneven", label: "Only in some categories" },
+      { value: "weak", label: "No, search or filters often fail" },
+      { value: "unknown", label: "We have not tested it" }
     ]
   },
   {
     id: "commerce_timing",
     eyebrow: "Commerce",
-    title: "Is a catalog launch, migration, or major cleanup approaching?",
+    title: "Is a catalog launch or cleanup coming?",
     showWhen: (answers) => ["products", "hybrid"].includes(answers.business_model),
     options: [
-      { value: "none", label: "No major initiative is planned" },
-      { value: "6_plus", label: "More than six months away" },
-      { value: "3_6", label: "Within three to six months" },
-      { value: "under_3", label: "Within three months or already underway" }
+      { value: "none", label: "No" },
+      { value: "6_plus", label: "More than 6 months away" },
+      { value: "3_6", label: "Within 3–6 months" },
+      { value: "under_3", label: "Within 3 months or underway" }
     ]
   }
 ];
@@ -245,36 +244,36 @@ function normalize(scores: Record<Pillar, number>): Record<Pillar, number> {
 
 function priorityFor(pillar: Pillar, answers: Answers) {
   if (pillar === "website") {
-    if (answers.website_state === "missing") return { pillar, title: "Establish the digital foundation", detail: "Create a focused website that explains the offer, builds trust, and gives every visitor a clear next step." };
-    if (answers.website_state === "confusing") return { pillar, title: "Clarify the customer journey", detail: "Restructure the message, page hierarchy, and calls to action around what customers need to understand and do." };
-    return { pillar, title: "Modernize the website experience", detail: "Bring the visual presentation, mobile experience, conversion path, and content structure in line with the business you operate today." };
+    if (answers.website_state === "missing") return { pillar, title: "Build the website customers need", detail: "Create a site that explains what you sell, proves you can deliver, and gives visitors one clear next step." };
+    if (answers.website_state === "confusing") return { pillar, title: "Make the offer easy to understand", detail: "Rewrite the message and page order so visitors know what you do and what to do next." };
+    return { pillar, title: "Make the website match the business", detail: "Update the design, mobile experience, content, and conversion path to fit the company you run today." };
   }
   if (pillar === "commerce") {
-    if (["messy", "vendor_only"].includes(answers.catalog_quality)) return { pillar, title: "Build a governed product-data foundation", detail: "Standardize titles, descriptions, attributes, categories, images, and source verification before scaling the storefront." };
-    if (["weak", "unknown"].includes(answers.product_discovery)) return { pillar, title: "Improve product discovery", detail: "Test search, category paths, filters, product families, and comparison details against real buyer language." };
-    return { pillar, title: "Strengthen the digital buying experience", detail: "Connect product information, navigation, merchandising, and conversion requirements into one reliable commerce journey." };
+    if (["messy", "vendor_only"].includes(answers.catalog_quality)) return { pillar, title: "Clean the product data first", detail: "Standardize titles, descriptions, specs, categories, and images before adding more products." };
+    if (["weak", "unknown"].includes(answers.product_discovery)) return { pillar, title: "Help buyers find the right product", detail: "Fix search, categories, filters, product families, and comparison details using real buyer terms." };
+    return { pillar, title: "Make products easier to buy", detail: "Connect product data, navigation, merchandising, and checkout into one clear buying path." };
   }
   if (pillar === "marketing") {
-    if (["lost", "manual_slow"].includes(answers.follow_up)) return { pillar, title: "Create a reliable lead-response system", detail: "Define ownership, response expectations, automated confirmations, source tracking, and a visible follow-up pipeline." };
-    if (["fragmented", "inactive"].includes(answers.marketing_system)) return { pillar, title: "Unify the growth message", detail: "Connect the website, campaigns, email, sales materials, and reporting around one offer and measurable customer path." };
-    return { pillar, title: "Turn attention into measurable opportunities", detail: "Improve lead capture, campaign alignment, follow-up, and conversion reporting instead of treating each channel as separate work." };
+    if (["lost", "manual_slow"].includes(answers.follow_up)) return { pillar, title: "Stop losing leads", detail: "Give every lead an owner, response deadline, source, and next step." };
+    if (["fragmented", "inactive"].includes(answers.marketing_system)) return { pillar, title: "Use one message everywhere", detail: "Align the website, email, ads, and sales materials around one offer and one customer action." };
+    return { pillar, title: "Turn attention into leads", detail: "Connect lead capture, follow-up, campaigns, and reporting so you can see what creates revenue." };
   }
-  if (["silos", "unclear"].includes(answers.systems_state)) return { pillar, title: "Connect the operating system", detail: "Map the handoffs between forms, inboxes, CRM, project tools, reporting, and customer communication before choosing new software." };
-  return { pillar, title: "Automate the highest-friction work", detail: "Prioritize repeatable workflows where automation or practical AI can remove duplicate entry, delays, and inconsistent execution." };
+  if (["silos", "unclear"].includes(answers.systems_state)) return { pillar, title: "Connect the tools you already use", detail: "Map how forms, email, CRM, projects, and reports should pass information before buying more software." };
+  return { pillar, title: "Automate the work that repeats", detail: "Start with one workflow where automation can remove duplicate entry, delays, or missed steps." };
 }
 
 const QUICK_WINS: Record<Pillar, { title: string; detail: string }> = {
-  website: { title: "Rewrite the first screen around one customer action", detail: "Use one clear audience, one business outcome, one proof point, and one primary call to action before adding more pages or features." },
-  commerce: { title: "Standardize one high-value product family", detail: "Choose a representative category and define the title pattern, required attributes, description structure, images, and category path that every related SKU should follow." },
-  marketing: { title: "Create one visible lead-response rule", detail: "Assign every inquiry an owner, expected response time, source label, and next action so promising conversations cannot disappear into an inbox." },
-  technology: { title: "Document one manual workflow end to end", detail: "List each trigger, person, tool, decision, and duplicate entry. Automate only after the real process and exceptions are visible." }
+  website: { title: "Rewrite the top of your homepage", detail: "State who you help, what result you create, one proof point, and one action visitors should take." },
+  commerce: { title: "Clean one important product family", detail: "Set the title format, required specs, description, images, and category path. Use it as the model for the rest." },
+  marketing: { title: "Set one lead-response rule", detail: "Give every new lead an owner, a reply deadline, a source, and a next step." },
+  technology: { title: "Map one manual workflow", detail: "List the trigger, people, tools, decisions, and repeat entries. Then choose what to automate." }
 };
 
 const IMPLEMENTATION: Record<Pillar, { title: string; detail: string; service: string }> = {
-  website: { title: "Website redesign and conversion system", detail: "Strategy, messaging, UX, responsive design, development, forms, analytics, and launch support organized around a clearer customer journey.", service: "Website Redesign" },
-  commerce: { title: "PIM and eCommerce modernization", detail: "Product-data cleanup, taxonomy, attributes, search, product-family organization, buyer-facing content, migration readiness, and storefront improvements.", service: "PIM & eCommerce Optimization" },
-  marketing: { title: "Sales and marketing system", detail: "Offer positioning, campaign assets, lead capture, lifecycle follow-up, sales enablement, CRM workflow, and practical performance reporting.", service: "Sales & Marketing Systems" },
-  technology: { title: "Technology and AI implementation", detail: "Workflow design, integrations, dashboards, portals, automation, and controlled AI assistance tied to an actual operating need.", service: "Technology & AI Implementation" }
+  website: { title: "Website redesign", detail: "A clearer message, better design, mobile-ready pages, stronger calls to action, forms, analytics, and launch support.", service: "Website Redesign" },
+  commerce: { title: "PIM and eCommerce cleanup", detail: "Clean product data, categories, attributes, search, product families, buyer-facing content, and migration-ready exports.", service: "PIM & eCommerce Optimization" },
+  marketing: { title: "Sales and marketing system", detail: "A clear offer, stronger lead capture, faster follow-up, useful sales assets, CRM workflow, and simple reporting.", service: "Sales & Marketing Systems" },
+  technology: { title: "Technology and AI implementation", detail: "Connected workflows, integrations, dashboards, portals, automation, and practical AI built around real work.", service: "Technology & AI Implementation" }
 };
 
 export function evaluateBlueprint(answers: Answers): BlueprintResult {
@@ -293,20 +292,20 @@ export function evaluateBlueprint(answers: Answers): BlueprintResult {
   const topScore = scores[primaryPillar];
   const urgency: BlueprintResult["urgency"] = topScore >= 70 || answers.commerce_timing === "under_3" ? "Immediate" : topScore >= 45 ? "Important" : "Focused";
 
-  let profile = "Connected Growth Foundation";
-  let profileSummary = "The business will benefit most from aligning its customer experience, growth process, and internal systems around a shared 90-day priority.";
+  let profile = "Too many priorities, no clear first move";
+  let profileSummary = "Your needs are spread across several areas. Pick one bottleneck, fix it, then move to the next.";
   if (primaryPillar === "website") {
-    profile = "Customer Experience Reset";
-    profileSummary = "The website is the highest-leverage constraint. Improving how the business is understood and how visitors move toward action should come before adding more disconnected tactics.";
+    profile = "Your website is the bottleneck";
+    profileSummary = "Visitors need a clearer reason to trust you and a clearer next step. Fix the website before adding more campaigns or tools.";
   } else if (primaryPillar === "commerce") {
-    profile = "Commerce Modernization";
-    profileSummary = "The largest opportunity sits between product information and the buying experience. Clean structure and stronger discovery should lead the modernization sequence.";
+    profile = "Product data is slowing sales";
+    profileSummary = "Buyers cannot reliably find, compare, or trust the right products. Clean the catalog and search experience first.";
   } else if (primaryPillar === "marketing") {
-    profile = "Growth System Alignment";
-    profileSummary = "Demand may exist, but capture, messaging, follow-up, or measurement is not operating as one dependable system.";
+    profile = "Leads are slipping through";
+    profileSummary = "Interest is not turning into a reliable pipeline. Fix the message, lead capture, follow-up, and tracking.";
   } else if (primaryPillar === "technology") {
-    profile = "Connected Operations";
-    profileSummary = "Manual work and disconnected tools are limiting capacity. The next step is to design the operating workflow before introducing more automation or AI.";
+    profile = "Manual work is costing time";
+    profileSummary = "Repeat work and disconnected tools are limiting capacity. Map the workflow, then automate the right steps.";
   }
 
   const first = priorities[0];
@@ -322,12 +321,12 @@ export function evaluateBlueprint(answers: Answers): BlueprintResult {
     quickWin: QUICK_WINS[primaryPillar],
     implementationOpportunity: { title: implementation.title, detail: implementation.detail },
     roadmap: [
-      { period: "30 days", title: "Define and stabilize", actions: [first.detail, QUICK_WINS[primaryPillar].detail, "Choose one owner and one measurable outcome for the modernization effort."] },
-      { period: "60 days", title: "Design and connect", actions: [second.detail, "Document the required content, data, workflow, and integration decisions before implementation.", "Prototype or pilot the highest-risk part with real users or records."] },
-      { period: "90 days", title: "Implement and measure", actions: [third.detail, implementation.detail, "Track adoption, conversion, time saved, data quality, or another outcome tied to the original constraint."] }
+      { period: "30 days", title: "Fix the first bottleneck", actions: [first.detail, QUICK_WINS[primaryPillar].detail, "Assign one owner and choose one number to improve."] },
+      { period: "60 days", title: "Connect the next pieces", actions: [second.detail, "Write down the content, data, workflow, and tool decisions.", "Test the riskiest part with real users or real records."] },
+      { period: "90 days", title: "Launch and measure", actions: [third.detail, implementation.detail, "Track one result: leads, sales, time saved, or data quality."] }
     ],
     servicePath: implementation.service,
-    serviceReason: `${PILLAR_LABELS[primaryPillar]} is currently the strongest opportunity, with ${PILLAR_LABELS[secondaryPillar].toLowerCase()} as the most important supporting workstream.`,
+    serviceReason: `Start with ${PILLAR_LABELS[primaryPillar]}. Then address ${PILLAR_LABELS[secondaryPillar].toLowerCase()}.`,
     urgency
   };
 }
