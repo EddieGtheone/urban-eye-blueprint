@@ -233,3 +233,58 @@ img{max-width:100%;height:auto}
 @media (max-width: 760px) {
   .ai-summary-card { grid-template-columns: 1fr; }
 }
+
+/* Expanded on-screen AI report sections */
+.ai-summary-card .diagnosis-detail { margin-top: 1rem; color: var(--muted); }
+.ai-summary-card .risk-note { margin-top: 1rem; }
+.diagnosis-evidence .mini-label { font-size: .62rem; text-transform: uppercase; letter-spacing: .14em; color: var(--gold-dark); font-weight: 700; margin: 0 0 .6rem; }
+.diagnosis-evidence .mini-label:not(:first-child) { margin-top: 1.6rem; }
+
+.snapshot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 4rem; }
+.snapshot-grid article { background: var(--paper); padding: 1.5rem; border-radius: 16px; }
+.snapshot-grid article > small { display: block; font-size: .62rem; text-transform: uppercase; letter-spacing: .14em; color: var(--gold-dark); font-weight: 700; margin-bottom: .6rem; }
+.snapshot-grid article p { color: var(--muted); font-size: .92rem; line-height: 1.6; margin: 0; }
+.snapshot-grid .snapshot-wide { grid-column: 1 / -1; }
+.snapshot-grid .snapshot-wide ul { margin: 0; padding-left: 1.15rem; color: var(--muted); font-size: .9rem; }
+.snapshot-grid .snapshot-wide li { margin: .5rem 0; line-height: 1.55; }
+
+.ai-priority-grid article { min-height: auto; display: flex; flex-direction: column; }
+.ai-priority-grid .why-now { color: var(--muted); font-size: .9rem; margin: .5rem 0 1rem; }
+.ai-priority-grid .action-steps { margin: 0 0 1rem; padding-left: 1.15rem; color: var(--ink); font-size: .88rem; }
+.ai-priority-grid .action-steps li { margin: .5rem 0; line-height: 1.5; }
+.ai-priority-grid .expected { font-size: .88rem; color: var(--muted); margin: 0 0 1.1rem; }
+.ai-priority-grid .action-meta { margin-top: auto; display: flex; flex-wrap: wrap; gap: .5rem; }
+.ai-priority-grid .action-meta span { font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--gold-dark); font-weight: 700; background: rgba(224, 182, 111, .12); border-radius: 999px; padding: .35rem .7rem; }
+
+.roadmap-grid .roadmap-proof { margin: 1rem 0 0; font-size: .82rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: .8rem; }
+
+.metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 7rem; }
+.metrics-grid article { background: var(--paper); padding: 1.5rem; border-radius: 16px; display: flex; flex-direction: column; gap: .5rem; }
+.metrics-grid h3 { font-family: var(--serif); font-size: 1.25rem; line-height: 1.15; margin: 0; }
+.metrics-grid p { color: var(--muted); font-size: .85rem; line-height: 1.5; margin: 0; }
+.metrics-grid small { font-size: .78rem; color: var(--ink); line-height: 1.45; }
+
+.recommendation-card { background: var(--paper); border: 1px solid #ded7ca; border-radius: 24px; padding: clamp(1.75rem, 4vw, 3rem); margin-bottom: 2.5rem; }
+.recommendation-card h2 { font-family: var(--serif); font-size: clamp(1.9rem, 4vw, 3.2rem); line-height: 1.05; margin: .4rem 0 .5rem; }
+.recommendation-card .rec-service { color: var(--muted); margin: 0 0 1.8rem; font-size: .95rem; }
+.recommendation-card .rec-service strong { color: var(--gold-dark); }
+.recommendation-card .rec-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 1.8rem; }
+.recommendation-card .rec-cols h4 { font-size: .68rem; text-transform: uppercase; letter-spacing: .12em; color: var(--gold-dark); margin: 0 0 .8rem; }
+.recommendation-card .rec-cols ul { margin: 0; padding-left: 1.15rem; color: var(--muted); font-size: .9rem; }
+.recommendation-card .rec-cols li { margin: .55rem 0; line-height: 1.5; }
+.recommendation-card .first-step { margin: 0; padding-top: 1.4rem; border-top: 1px solid var(--line); font-size: .95rem; }
+
+.report-fineprint { margin: 3rem 0 0; padding: 1.75rem; background: var(--warm); border-radius: 16px; }
+.report-fineprint h4 { font-size: .68rem; text-transform: uppercase; letter-spacing: .12em; color: var(--gold-dark); margin: 0 0 .8rem; }
+.report-fineprint ul { margin: 0 0 1.2rem; padding-left: 1.15rem; color: var(--muted); font-size: .82rem; }
+.report-fineprint li { margin: .45rem 0; line-height: 1.5; }
+.report-fineprint p { margin: 0; color: #8a877f; font-size: .78rem; line-height: 1.55; }
+
+@media (max-width: 900px) {
+  .snapshot-grid { grid-template-columns: 1fr 1fr; }
+  .metrics-grid { grid-template-columns: 1fr 1fr; }
+  .recommendation-card .rec-cols { grid-template-columns: 1fr; gap: 1.2rem; }
+}
+@media (max-width: 560px) {
+  .snapshot-grid, .metrics-grid { grid-template-columns: 1fr; }
+}

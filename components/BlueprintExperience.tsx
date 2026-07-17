@@ -305,30 +305,103 @@ export default function BlueprintExperience() {
           {aiReport && (
             <section className="ai-summary-card">
               <div>
-                <p className="eyebrow dark">Detailed company view</p>
+                <p className="eyebrow dark">Primary diagnosis</p>
                 <h2>{aiReport.primaryDiagnosis.headline}</h2>
                 <p>{aiReport.executiveSummary}</p>
+                <p className="diagnosis-detail">{aiReport.primaryDiagnosis.summary}</p>
+                <p className="risk-note"><strong>Risk of delay:</strong> {aiReport.primaryDiagnosis.riskOfDelay}</p>
               </div>
-              <ul>{aiReport.primaryDiagnosis.evidence.slice(0, 3).map((item) => <li key={item}>{item}</li>)}</ul>
+              <div className="diagnosis-evidence">
+                <p className="mini-label">What the answers show</p>
+                <ul>{aiReport.primaryDiagnosis.evidence.map((item) => <li key={item}>{item}</li>)}</ul>
+                <p className="mini-label">Likely business impact</p>
+                <ul>{aiReport.primaryDiagnosis.businessImpact.map((item) => <li key={item}>{item}</li>)}</ul>
+              </div>
             </section>
           )}
 
+          {aiReport && (
+            <>
+              <div className="section-title"><p className="eyebrow dark">Company snapshot</p><h2>What we&rsquo;re working with.</h2></div>
+              <div className="snapshot-grid">
+                <article><small>What you sell</small><p>{aiReport.companySnapshot.whatTheySell}</p></article>
+                <article><small>Stated goal</small><p>{aiReport.companySnapshot.statedGoal}</p></article>
+                <article><small>Current state</small><p>{aiReport.companySnapshot.currentState}</p></article>
+                <article className="snapshot-wide"><small>{websiteSnapshotUsed ? "Website observations" : "Website review"}</small><ul>{aiReport.companySnapshot.websiteObservations.map((item) => <li key={item}>{item}</li>)}</ul></article>
+              </div>
+            </>
+          )}
+
           <div className="section-title"><p className="eyebrow dark">Your next three moves</p><h2>Do them in this order.</h2></div>
-          <div className="priority-grid">
-            {result.priorities.map((priority, index) => <article key={priority.title}><span>0{index + 1}</span><small>{PILLAR_LABELS[priority.pillar]}</small><h3>{priority.title}</h3><p>{priority.detail}</p></article>)}
-          </div>
+          {aiReport ? (
+            <div className="priority-grid ai-priority-grid">
+              {aiReport.priorityActions.map((action) => (
+                <article key={action.rank}>
+                  <span>0{action.rank}</span>
+                  <h3>{action.title}</h3>
+                  <p className="why-now">{action.whyNow}</p>
+                  <ul className="action-steps">{action.actions.map((step) => <li key={step}>{step}</li>)}</ul>
+                  <p className="expected"><strong>Expected outcome:</strong> {action.expectedOutcome}</p>
+                  <div className="action-meta"><span>{action.suggestedOwner}</span><span>{action.timeframe}</span></div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="priority-grid">
+              {result.priorities.map((priority, index) => <article key={priority.title}><span>0{index + 1}</span><small>{PILLAR_LABELS[priority.pillar]}</small><h3>{priority.title}</h3><p>{priority.detail}</p></article>)}
+            </div>
+          )}
 
           <div className="quick-win"><div><p className="eyebrow">Start this week</p><h2>{result.quickWin.title}</h2></div><p>{result.quickWin.detail}</p></div>
 
           <div className="section-title"><p className="eyebrow dark">Your 90-day plan</p><h2>Now. Next. Then.</h2></div>
           <div className="roadmap-grid">
-            {result.roadmap.map((phase) => <article key={phase.period}><span>{phase.period}</span><h3>{phase.title}</h3><ul>{phase.actions.map((action) => <li key={action}>{action}</li>)}</ul></article>)}
+            {aiReport
+              ? aiReport.roadmap.map((phase) => <article key={phase.period}><span>{phase.period}</span><h3>{phase.objective}</h3><ul>{phase.actions.map((action) => <li key={action}>{action}</li>)}</ul><p className="roadmap-proof"><strong>Proof of progress:</strong> {phase.proofOfProgress}</p></article>)
+              : result.roadmap.map((phase) => <article key={phase.period}><span>{phase.period}</span><h3>{phase.title}</h3><ul>{phase.actions.map((action) => <li key={action}>{action}</li>)}</ul></article>)}
           </div>
+
+          {aiReport && (
+            <>
+              <div className="section-title"><p className="eyebrow dark">Metrics to track</p><h2>How you&rsquo;ll know it&rsquo;s working.</h2></div>
+              <div className="metrics-grid">
+                {aiReport.metrics.map((metric) => (
+                  <article key={metric.name}>
+                    <h3>{metric.name}</h3>
+                    <p>{metric.whyItMatters}</p>
+                    <small><strong>Starting point:</strong> {metric.startingPoint}</small>
+                    <small><strong>Target:</strong> {metric.targetDirection}</small>
+                  </article>
+                ))}
+              </div>
+            </>
+          )}
+
+          {aiReport && (
+            <section className="recommendation-card">
+              <p className="eyebrow dark">Recommended Urban Eye engagement</p>
+              <h2>{aiReport.urbanEyeRecommendation.engagement}</h2>
+              <p className="rec-service">Best-fit service: <strong>{aiReport.urbanEyeRecommendation.service}</strong></p>
+              <div className="rec-cols">
+                <div><h4>Scope</h4><ul>{aiReport.urbanEyeRecommendation.scope.map((item) => <li key={item}>{item}</li>)}</ul></div>
+                <div><h4>Deliverables</h4><ul>{aiReport.urbanEyeRecommendation.deliverables.map((item) => <li key={item}>{item}</li>)}</ul></div>
+              </div>
+              <p className="first-step"><strong>First step:</strong> {aiReport.urbanEyeRecommendation.firstStep}</p>
+            </section>
+          )}
 
           <section className="implementation-card">
             <div><p className="eyebrow">How Urban Eye can help</p><h2>{result.implementationOpportunity.title}</h2><p>{result.implementationOpportunity.detail}</p></div>
             <div className="implementation-actions"><button className="button button-light" onClick={downloadPdf} disabled={!aiReport}>Download Detailed PDF</button><a className="button button-gold" href="https://www.urbaneyebybrooks.com/contact.html?project=blueprint">Review My Plan</a></div>
           </section>
+
+          {aiReport && (
+            <div className="report-fineprint">
+              <h4>Assumptions</h4>
+              <ul>{aiReport.assumptions.map((item) => <li key={item}>{item}</li>)}</ul>
+              <p>{aiReport.disclaimer}</p>
+            </div>
+          )}
           <p className="result-reference">Blueprint reference: {submissionId || "local preview"}</p>
         </section>
       </main>
