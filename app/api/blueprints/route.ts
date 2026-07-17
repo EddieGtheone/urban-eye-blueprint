@@ -49,7 +49,7 @@ async function saveToSupabase(record: Record<string, unknown>) {
   if (!response.ok) {
     const detail = await response.text();
     console.error("Supabase blueprint insert failed", response.status, detail);
-    throw new Error("The blueprint could not be saved. Please try again.");
+    throw new Error("We could not save your plan. Please try again.");
   }
   return { saved: true, demo: false };
 }
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
   // Quietly accept obvious bot submissions without writing them.
   if (honeypot) return NextResponse.json({ id: randomUUID(), accepted: true, filtered: true });
   if (!startedAt || Date.now() - startedAt < 3000) {
-    return NextResponse.json({ error: "Please take a moment to review your answers and try again." }, { status: 429 });
+    return NextResponse.json({ error: "Please wait a moment, then try again." }, { status: 429 });
   }
 
   const name = asString(contact.name, 120);
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
   const consent = contact.consent === true;
 
   if (!name || !company || !emailPattern.test(email) || !timeline || !consent) {
-    return NextResponse.json({ error: "Required lead information is missing or invalid." }, { status: 422 });
+    return NextResponse.json({ error: "Add the required contact details and try again." }, { status: 422 });
   }
 
   const canonicalResult = evaluateBlueprint(answers);
@@ -130,6 +130,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ id, result: canonicalResult, ...storage }, { status: 201 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "The blueprint could not be saved. Please try again." }, { status: 503 });
+    return NextResponse.json({ error: "We could not save your plan. Please try again." }, { status: 503 });
   }
 }
