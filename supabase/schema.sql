@@ -34,6 +34,8 @@ create table if not exists public.blueprint_submissions (
   page_url text,
   referrer text,
   consent_at timestamptz not null,
+  marketing_consent boolean not null default false,
+  marketing_consent_at timestamptz,
   ip_hash text,
   user_agent text,
 

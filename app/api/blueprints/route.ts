@@ -82,9 +82,12 @@ export async function POST(request: NextRequest) {
   const website = asString(contact.website, 500);
   const role = asString(contact.role, 120);
   const timeline = asString(contact.timeline, 50);
-  const consent = contact.consent === true;
+  // Delivery consent is required; ongoing marketing consent is optional and
+  // recorded separately so we never treat delivery as a marketing opt-in.
+  const deliveryConsent = contact.deliveryConsent === true;
+  const marketingConsent = contact.marketingConsent === true;
 
-  if (!name || !company || !emailPattern.test(email) || !timeline || !consent) {
+  if (!name || !company || !emailPattern.test(email) || !timeline || !deliveryConsent) {
     return NextResponse.json({ error: "Add the required contact details and try again." }, { status: 422 });
   }
 
@@ -121,6 +124,8 @@ export async function POST(request: NextRequest) {
     page_url: asString(body.pageUrl, 1000) || null,
     referrer: asString(body.referrer, 1000) || null,
     consent_at: new Date().toISOString(),
+    marketing_consent: marketingConsent,
+    marketing_consent_at: marketingConsent ? new Date().toISOString() : null,
     ip_hash: ipHash,
     user_agent: asString(request.headers.get("user-agent"), 500) || null
   };

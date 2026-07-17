@@ -21,7 +21,8 @@ type Contact = {
   website: string;
   role: string;
   timeline: string;
-  consent: boolean;
+  deliveryConsent: boolean;
+  marketingConsent: boolean;
   company_site: string;
 };
 
@@ -32,7 +33,8 @@ const initialContact: Contact = {
   website: "",
   role: "",
   timeline: "",
-  consent: false,
+  deliveryConsent: false,
+  marketingConsent: false,
   company_site: ""
 };
 
@@ -70,13 +72,28 @@ export default function BlueprintExperience() {
 
   const visibleQuestions = useMemo(() => getVisibleQuestions(answers), [answers]);
   const currentQuestion = visibleQuestions[Math.min(questionIndex, Math.max(visibleQuestions.length - 1, 0))];
-  const progress = visibleQuestions.length ? Math.round(((questionIndex + 1) / visibleQuestions.length) * 100) : 0;
+  // The branch total is only stable once the business model is chosen (it
+  // determines the 10- vs 14-question path). Until then we hide the total.
+  const branchTotalKnown = Boolean(answers.business_model);
+  const progress = branchTotalKnown && visibleQuestions.length
+    ? Math.round(((questionIndex + 1) / visibleQuestions.length) * 100)
+    : 0;
 
   function begin() {
     startedAt.current = Date.now();
     setStage("assessment");
     setQuestionIndex(0);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // Returning to the introduction intentionally clears the in-progress path so
+  // a fresh start always re-derives the question total from scratch.
+  function returnToIntro() {
+    setAnswers({});
+    setQuestionIndex(0);
+    setResult(null);
+    setError("");
+    setStage("intro");
   }
 
   function chooseAnswer(value: string) {
@@ -93,7 +110,7 @@ export default function BlueprintExperience() {
 
   function goBack() {
     if (questionIndex === 0) {
-      setStage("intro");
+      returnToIntro();
       return;
     }
     setQuestionIndex((index) => Math.max(0, index - 1));
@@ -107,8 +124,8 @@ export default function BlueprintExperience() {
       setStage("assessment");
       return;
     }
-    if (!contact.name || !contact.email || !contact.company || !contact.timeline || !contact.consent) {
-      setError("Add your name, email, company, timeline, and consent.");
+    if (!contact.name || !contact.email || !contact.company || !contact.timeline || !contact.deliveryConsent) {
+      setError("Add the required information below to view your Blueprint.");
       return;
     }
 
@@ -218,14 +235,34 @@ export default function BlueprintExperience() {
     return (
       <main className="assessment-shell">
         <header className="compact-header">
-          <button className="brand-button" onClick={() => setStage("intro")} aria-label="Return to blueprint introduction">
+          <button className="brand-button" onClick={returnToIntro} aria-label="Return to Blueprint introduction">
             <Image src="/assets/urban-eye-logo-black.png" alt="Urban Eye by Brooks & Co." width={182} height={52} priority />
           </button>
-          <span>90-Day Business Plan</span>
+          <span>Business Modernization Blueprint</span>
         </header>
         <section className="question-panel">
-          <div className="progress-meta"><span>Question {questionIndex + 1} of {visibleQuestions.length}</span><strong>{progress}%</strong></div>
-          <div className="progress-track"><span style={{ width: `${progress}%` }} /></div>
+          <div className="progress-meta" aria-live="polite">
+            <span>
+              {branchTotalKnown
+                ? `Question ${questionIndex + 1} of ${visibleQuestions.length}`
+                : `Question ${questionIndex + 1}`}
+            </span>
+            {branchTotalKnown && <strong>{progress}%</strong>}
+          </div>
+          <div
+            className="progress-track"
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={branchTotalKnown ? visibleQuestions.length : undefined}
+            aria-valuenow={branchTotalKnown ? questionIndex + 1 : undefined}
+            aria-valuetext={
+              branchTotalKnown
+                ? `Question ${questionIndex + 1} of ${visibleQuestions.length}`
+                : `Question ${questionIndex + 1}`
+            }
+          >
+            <span style={{ width: `${branchTotalKnown ? progress : 0}%` }} />
+          </div>
           <p className="eyebrow dark">{currentQuestion.eyebrow}</p>
           <h1>{currentQuestion.title}</h1>
           {currentQuestion.description && <p className="question-description">{currentQuestion.description}</p>}
@@ -283,10 +320,11 @@ export default function BlueprintExperience() {
               </select>
             </label>
             <label className="honeypot" aria-hidden="true">Company site<input tabIndex={-1} autoComplete="off" value={contact.company_site} onChange={(e) => setContact({ ...contact, company_site: e.target.value })} /></label>
-            <label className="check-label"><input type="checkbox" checked={contact.consent} onChange={(e) => setContact({ ...contact, consent: e.target.checked })} /><span>Send me my plan and related follow-up from Urban Eye. I can unsubscribe anytime. *</span></label>
+            <label className="check-label"><input type="checkbox" checked={contact.deliveryConsent} onChange={(e) => setContact({ ...contact, deliveryConsent: e.target.checked })} required /><span>I agree to receive my Blueprint by email and accept the <a href="https://www.urbaneyebybrooks.com/privacy.html">Privacy Policy</a>. *</span></label>
+            <label className="check-label"><input type="checkbox" checked={contact.marketingConsent} onChange={(e) => setContact({ ...contact, marketingConsent: e.target.checked })} /><span>Send me occasional Urban Eye guidance and service updates. I can unsubscribe at any time.</span></label>
             {error && <p className="form-error" role="alert">{error}</p>}
-            <button className="button button-gold full" disabled={submitting}>{submitting ? "Building your plan…" : "Show My Plan →"}</button>
-            <p className="privacy-note">We use your information to deliver the plan and follow up. See our <a href="https://www.urbaneyebybrooks.com/privacy.html">privacy policy</a>.</p>
+            <button className="button button-gold full" disabled={submitting}>{submitting ? "Building your plan…" : "View My Blueprint"}</button>
+            <p className="privacy-note">We use this information to generate and send your Blueprint. Urban Eye will only send ongoing marketing if you opt in. Read the <a href="https://www.urbaneyebybrooks.com/privacy.html">Privacy Policy</a>.</p>
             <button type="button" className="back-link light" onClick={() => { setStage("assessment"); setQuestionIndex(Math.max(0, visibleQuestions.length - 1)); }}>← Change an answer</button>
           </form>
         </section>
