@@ -305,7 +305,7 @@ export default function BlueprintExperience() {
           {aiReport && (
             <section className="ai-summary-card">
               <div>
-                <p className="eyebrow dark">Primary diagnosis</p>
+                <p className="eyebrow dark">Your biggest opportunity</p>
                 <h2>{aiReport.primaryDiagnosis.headline}</h2>
                 <p>{aiReport.executiveSummary}</p>
                 <p className="diagnosis-detail">{aiReport.primaryDiagnosis.summary}</p>
@@ -322,7 +322,7 @@ export default function BlueprintExperience() {
 
           {aiReport && (
             <>
-              <div className="section-title"><p className="eyebrow dark">Company snapshot</p><h2>What we&rsquo;re working with.</h2></div>
+              <div className="section-title"><p className="eyebrow dark">What we see in your business</p><h2>What we&rsquo;re working with.</h2></div>
               <div className="snapshot-grid">
                 <article><small>What you sell</small><p>{aiReport.companySnapshot.whatTheySell}</p></article>
                 <article><small>Stated goal</small><p>{aiReport.companySnapshot.statedGoal}</p></article>
@@ -363,7 +363,7 @@ export default function BlueprintExperience() {
 
           {aiReport && (
             <>
-              <div className="section-title"><p className="eyebrow dark">Metrics to track</p><h2>How you&rsquo;ll know it&rsquo;s working.</h2></div>
+              <div className="section-title"><p className="eyebrow dark">What to watch</p><h2>How you&rsquo;ll know it&rsquo;s working.</h2></div>
               <div className="metrics-grid">
                 {aiReport.metrics.map((metric) => (
                   <article key={metric.name}>
@@ -379,7 +379,7 @@ export default function BlueprintExperience() {
 
           {aiReport && (
             <section className="recommendation-card">
-              <p className="eyebrow dark">Recommended Urban Eye engagement</p>
+              <p className="eyebrow dark">How Urban Eye builds this with you</p>
               <h2>{aiReport.urbanEyeRecommendation.engagement}</h2>
               <p className="rec-service">Best-fit service: <strong>{aiReport.urbanEyeRecommendation.service}</strong></p>
               <div className="rec-cols">

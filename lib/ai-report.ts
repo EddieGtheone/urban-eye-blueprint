@@ -1,6 +1,7 @@
 import OpenAI from 'openai';
 import { Answers, BlueprintResult, PILLAR_LABELS, QUESTIONS } from '@/lib/assessment';
 import { WebsiteSnapshot } from '@/lib/website-snapshot';
+import { SALES_MARKETING_PRINCIPLES } from '@/lib/marketing-principles';
 
 export type ReportContact = {
   name: string;
@@ -177,15 +178,15 @@ function timelineLabel(value: string) {
 function websiteObservations(snapshot: WebsiteSnapshot | null) {
   if (!snapshot) {
     return [
-      'No usable public website snapshot was available, so website-specific observations require a live review.',
-      'The recommendations below rely on the questionnaire and the scored business priorities.'
+      "We couldn't pull a live look at your site this time — an easy thing to walk through together.",
+      'For now, this plan is built from your answers and the priorities they point to.'
     ];
   }
   const observations = [];
-  if (snapshot.title) observations.push(`Homepage title: ${snapshot.title}`);
-  if (snapshot.description) observations.push(`Homepage description: ${snapshot.description}`);
-  if (snapshot.headings.length) observations.push(`Visible page themes include: ${snapshot.headings.slice(0, 4).join('; ')}`);
-  observations.push('Only the public homepage snapshot was reviewed; deeper pages, analytics, and internal systems were not inspected.');
+  if (snapshot.title) observations.push(`Your homepage leads with: ${snapshot.title}`);
+  if (snapshot.description) observations.push(`How it describes you: ${snapshot.description}`);
+  if (snapshot.headings.length) observations.push(`What stands out on the page: ${snapshot.headings.slice(0, 4).join('; ')}`);
+  observations.push("We looked at your public homepage only — there's more we'll uncover once we dig in together.");
   return observations.slice(0, 4);
 }
 
@@ -208,22 +209,22 @@ export function buildFallbackAiReport(
   const priorityActions = result.priorities.map((priority, index) => ({
     rank: index + 1,
     title: priority.title,
-    whyNow: index === 0 ? 'This is the highest-scoring constraint in the assessment and should be addressed before adding more complexity.' : 'This supports the primary fix and reduces the chance that gains are lost elsewhere in the customer journey.',
+    whyNow: index === 0 ? 'This is where your momentum starts. It is the single biggest thing holding your business back right now, and fixing it first makes everything after it easier and more rewarding.' : 'This is what protects your win. Get it in place and the progress you just made keeps paying off instead of leaking away somewhere else in the customer journey.',
     actions: [
       priority.detail,
-      index === 0 ? result.quickWin.detail : `Document the current ${PILLAR_LABELS[priority.pillar].toLowerCase()} process and assign one owner.`,
-      'Choose one measurable result and review it every week.'
+      index === 0 ? result.quickWin.detail : `Give the ${PILLAR_LABELS[priority.pillar].toLowerCase()} side one clear owner so nothing slips through the cracks.`,
+      'Pick one result you actually care about and check it every week — small, steady wins compound fast.'
     ],
-    expectedOutcome: index === 0 ? 'A clearer first priority, less wasted effort, and a stronger base for the next phase.' : 'A more consistent customer and team experience with fewer gaps between systems.',
-    suggestedOwner: contact.role || (answers.team_size === 'solo' ? contact.name : 'Business owner or functional lead'),
-    timeframe: index === 0 ? 'Start in the first 30 days' : index === 1 ? 'Begin by day 45' : 'Complete or validate by day 90'
+    expectedOutcome: index === 0 ? 'A business that feels focused instead of scattered — less wasted effort, real traction, and a foundation you can confidently build on.' : 'A smoother experience for your customers and your team, with fewer gaps where good opportunities used to disappear.',
+    suggestedOwner: contact.role || (answers.team_size === 'solo' ? contact.name : 'You or a trusted lead'),
+    timeframe: index === 0 ? 'Start in the next 30 days' : index === 1 ? 'Kick off by day 45' : 'Land it by day 90'
   }));
 
   return {
     reportTitle: `${contact.company} 90-Day Business Plan`,
-    reportSubtitle: 'A practical plan for what to fix first, what to do next, and how to measure progress.',
+    reportSubtitle: 'Your clearest next move, the momentum it unlocks, and exactly where to begin.',
     generatedFor: contact.company,
-    executiveSummary: `${contact.company}'s assessment points to ${PILLAR_LABELS[result.primaryPillar].toLowerCase()} as the first constraint to fix. ${result.profileSummary} The plan below keeps the work sequenced: solve the primary bottleneck, connect the supporting systems, then launch and measure the result.`,
+    executiveSummary: `Here is the good news for ${contact.company}: you do not need to fix everything at once. Your answers point to one clear place to start — ${PILLAR_LABELS[result.primaryPillar].toLowerCase()} — and that is where your fastest wins are hiding. ${result.profileSummary} The plan below moves in the right order: unlock the biggest opportunity first, connect the pieces around it, then launch and feel the difference. Start now and you build a lead that gets harder for competitors to close every week.`,
     companySnapshot: {
       whatTheySell: answerLabel('business_model', answers.business_model),
       statedGoal: answerLabel('primary_goal', answers.primary_goal),
@@ -235,24 +236,24 @@ export function buildFallbackAiReport(
       summary: result.profileSummary,
       evidence: evidence.slice(0, 5),
       businessImpact: [
-        'Time and budget can be spread across too many disconnected fixes.',
-        'Prospects may receive an uneven experience between the website, follow-up, product information, and internal process.',
-        `The strongest near-term opportunity is to improve ${PILLAR_LABELS[result.primaryPillar].toLowerCase()} before scaling activity.`
+        'Right now your energy and budget get spread thin across too many small fixes, so none of them really move the needle.',
+        'Your customers can feel the gaps — an uneven experience between your website, your follow-up, and how your business runs behind the scenes.',
+        `The biggest, fastest win on the table is ${PILLAR_LABELS[result.primaryPillar].toLowerCase()} — get this right and everything else gets easier.`
       ],
-      riskOfDelay: 'Waiting adds more leads, content, product records, and manual work to the same weak foundation, making the eventual cleanup larger.'
+      riskOfDelay: 'Every month you wait, more leads, more content, and more busywork pile onto the same shaky foundation. The problem does not stay the same size — it grows, and so does the effort to fix it later. The businesses that move first are already pulling ahead.'
     },
     priorityActions,
     roadmap: result.roadmap.map((phase, index) => ({
       period: index === 0 ? 'Days 1-30' : index === 1 ? 'Days 31-60' : 'Days 61-90',
       objective: phase.title,
       actions: phase.actions,
-      proofOfProgress: index === 0 ? 'One owner, one baseline metric, and one approved first-phase scope.' : index === 1 ? 'The revised workflow or experience is tested with real users, leads, or records.' : 'The improvement is live and its first performance review is complete.'
+      proofOfProgress: index === 0 ? 'You have one clear owner, a starting point you can measure, and a first move everyone agrees on — no more guessing.' : index === 1 ? 'The improved experience is in front of real customers and leads, and you can already feel it working better.' : 'It is live, it is yours, and you have your first look at the difference it made.'
     })),
     metrics: [
-      { name: 'Qualified actions from the website', whyItMatters: 'Shows whether visitors understand the offer and take the intended next step.', startingPoint: 'Measure the current monthly count before changes.', targetDirection: 'Increase qualified form submissions, calls, bookings, or purchases.' },
-      { name: 'Lead response time', whyItMatters: 'Fast, consistent follow-up reduces lost opportunities.', startingPoint: 'Measure median time from inquiry to first useful reply.', targetDirection: 'Reduce the median and the number of leads with no response.' },
-      { name: 'Manual hours per week', whyItMatters: 'Reveals where disconnected tools and repeated entry consume capacity.', startingPoint: 'Estimate hours for the selected workflow.', targetDirection: 'Reduce repeat entry, handoffs, and status checking.' },
-      { name: result.primaryPillar === 'commerce' ? 'Catalog completeness' : 'Primary project outcome', whyItMatters: 'Keeps the first 90-day effort tied to a visible business result.', startingPoint: result.primaryPillar === 'commerce' ? 'Sample the percentage of records with required titles, attributes, images, and categories.' : 'Set a baseline tied to leads, sales, time saved, or customer completion.', targetDirection: 'Improve the selected measure every review cycle.' }
+      { name: 'Real inquiries from your website', whyItMatters: 'Tells you whether visitors actually get what you do and take the next step — the clearest sign your site is working for you.', startingPoint: 'Jot down how many you get in a typical month today.', targetDirection: 'More of the right people reaching out, booking, or buying.' },
+      { name: 'How fast you follow up', whyItMatters: 'The quicker you respond, the more deals you win — speed is one of the easiest edges to grab.', startingPoint: 'Notice how long it usually takes to reply to a new lead.', targetDirection: 'Faster replies, and no lead left hanging.' },
+      { name: 'Hours you get back each week', whyItMatters: 'Every hour spent on repetitive busywork is an hour not spent growing — this is time you can win back.', startingPoint: 'Ballpark the hours the team loses to repeat work now.', targetDirection: 'Less doing the same thing twice, more moving the business forward.' },
+      { name: result.primaryPillar === 'commerce' ? 'How easy your products are to trust and buy' : 'Your headline 90-day win', whyItMatters: 'Keeps the whole effort pointed at a result you can actually see and feel.', startingPoint: result.primaryPillar === 'commerce' ? 'Look at how many products have the clear info and images buyers expect.' : 'Pick one number that matters — leads, sales, or time saved — and mark where you stand.', targetDirection: 'Steady, visible improvement every time you check in.' }
     ],
     urbanEyeRecommendation: {
       service: result.servicePath,
@@ -264,14 +265,14 @@ export function buildFallbackAiReport(
         'Built and tested first-phase solution',
         'Launch checklist and measurement plan'
       ],
-      firstStep: `Review this plan with Urban Eye and confirm the first ${PILLAR_LABELS[result.primaryPillar].toLowerCase()} outcome, owner, and 30-day scope.`
+      firstStep: `Bring this plan to Urban Eye and let's map out your first ${PILLAR_LABELS[result.primaryPillar].toLowerCase()} win together — who owns it, what it looks like, and how we get there in the first 30 days.`
     },
     assumptions: [
-      'Recommendations are based on questionnaire responses and a limited public homepage snapshot when available.',
-      'No analytics, CRM records, financial data, customer interviews, or internal system access were reviewed.',
-      'Targets should be finalized after baseline data and technical constraints are confirmed.'
+      'This plan is built from your answers and a quick look at your public homepage — the more we learn together, the sharper it gets.',
+      'We have not looked inside your analytics, tools, or finances yet, so treat this as a confident starting direction, not the final word.',
+      'We will lock in specific targets once we see your real numbers together.'
     ],
-    disclaimer: 'This AI-assisted planning report is a directional business document, not a guarantee of results. Validate priorities, costs, timing, compliance, and technical feasibility before implementation.'
+    disclaimer: 'This is a planning guide to help you decide where to start — a clear direction, not a promise of specific results. Before any big investment, we will confirm the details, timing, and feasibility with you.'
   };
 }
 
@@ -314,15 +315,17 @@ export async function generateAiBlueprintReport(
       store: false,
       reasoning: { effort: 'low' },
       instructions: [
-        'You are Urban Eye, a practical business modernization consultancy.',
-        'Create a detailed, useful 90-day report for the named company.',
-        'The fixedAssessment scores, ranking, urgency, and recommended service are authoritative. Do not change them.',
-        'Use only the questionnaire and website snapshot supplied. Never invent customers, revenue, staff, products, technology, performance data, or website findings.',
-        'When evidence is missing, state that it was not provided or requires validation.',
-        'Write in direct plain English. Use concrete actions, owners, timing, and measures. Avoid hype, jargon, and vague claims.',
-        'Do not include prices. Do not make legal, financial, security, accessibility, or compliance guarantees.',
-        'Website observations must be traceable to the supplied snapshot and must acknowledge that only a limited public snapshot was reviewed.',
-        'Make the report substantial enough to be useful, but do not repeat the same point across sections.'
+        "You are the team at Urban Eye by Brooks & Co. — a modernization partner that helps businesses look sharper, sell smarter, market with intent, and run smoother.",
+        "Write this 90-day plan like a sharp, encouraging human expert talking with a business owner who respects their time. Warm, confident, and genuinely exciting — a plan they want to lean into, never a technical audit or a dry checklist.",
+        "Make them feel the opportunity. Paint a clear picture of what 90 focused days could unlock for their business, and let them feel what it quietly costs to keep waiting while sharper competitors pull ahead. Give them real momentum and a reason to start now.",
+        SALES_MARKETING_PRINCIPLES,
+        "The fixedAssessment scores, ranking, urgency, and recommended service are authoritative. Never change them — your job is to bring them to life and make them compelling, not to re-decide them.",
+        "Use only the questionnaire answers and the website snapshot provided. Never invent customers, revenue, staff, products, technology, results, or website findings. The energy and urgency must come from vivid framing and real stakes — never from made-up numbers, savings, percentages, or performance claims.",
+        "When something was not provided, mention it naturally and frame it as an easy early win to lock down together — never as a cold 'not provided / requires validation' note.",
+        "Stay in the owner's language. Turn anything technical into what it means for their customers, their reputation, their time, and their money. No jargon, no system-speak.",
+        "Do not include prices, and do not make legal, financial, security, accessibility, or compliance guarantees.",
+        "Website observations must trace to the supplied snapshot, and should gently note that only the public homepage was reviewed.",
+        "Make it substantial and genuinely useful, but never repeat the same point across sections. Every line should earn its place and pull them one step closer to working with Urban Eye."
       ].join('\n'),
       input: JSON.stringify(promptPayload(contact, answers, result, snapshot)),
       text: {
