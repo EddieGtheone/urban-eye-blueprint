@@ -42,6 +42,13 @@ const initialContact: Contact = {
 
 const pillarOrder: Pillar[] = ["website", "commerce", "marketing", "technology"];
 
+function scoreStatus(score: number) {
+  if (score >= 75) return "Critical";
+  if (score >= 50) return "Fix next";
+  if (score >= 25) return "Needs attention";
+  return "Lower priority";
+}
+
 function ScoreBars({ scores }: { scores: BlueprintResult["scores"] }) {
   return (
     <div className="score-grid" aria-label="Business priority scores">
@@ -49,12 +56,11 @@ function ScoreBars({ scores }: { scores: BlueprintResult["scores"] }) {
         <article className="score-card" key={pillar}>
           <div className="score-card-heading">
             <span>{PILLAR_LABELS[pillar]}</span>
-            <strong>{scores[pillar]}</strong>
           </div>
           <div className="score-track" aria-hidden="true">
             <span style={{ width: `${Math.max(6, scores[pillar])}%` }} />
           </div>
-          <small>{scores[pillar] >= 70 ? "Fix now" : scores[pillar] >= 45 ? "Fix next" : "Lower priority"}</small>
+          <small className="score-status">{scoreStatus(scores[pillar])} · {scores[pillar]}/100</small>
         </article>
       ))}
     </div>
@@ -320,15 +326,20 @@ export default function BlueprintExperience() {
             </section>
           )}
 
-          {aiReport && (
+          {aiReport && aiReport.evidenceLog?.length > 0 && (
             <>
-              <div className="section-title"><p className="eyebrow dark">What we see in your business</p><h2>What we&rsquo;re working with.</h2></div>
-              <div className="snapshot-grid">
-                <article><small>What you sell</small><p>{aiReport.companySnapshot.whatTheySell}</p></article>
-                <article><small>Stated goal</small><p>{aiReport.companySnapshot.statedGoal}</p></article>
-                <article><small>Current state</small><p>{aiReport.companySnapshot.currentState}</p></article>
-                <article className="snapshot-wide"><small>{websiteSnapshotUsed ? "Website observations" : "Website review"}</small><ul>{aiReport.companySnapshot.websiteObservations.map((item) => <li key={item}>{item}</li>)}</ul></article>
-              </div>
+              <div className="section-title"><p className="eyebrow dark">What we saw</p><h2>The evidence behind this plan.</h2></div>
+              <ul className="evidence-log">
+                {aiReport.evidenceLog.map((item, index) => (
+                  <li key={`${item.source}-${index}`}>
+                    <span className={`evidence-tag tag-${item.source.toLowerCase()}`}>{item.source}</span>
+                    <span className="evidence-finding">{item.finding}</span>
+                  </li>
+                ))}
+              </ul>
+              {websiteSnapshotUsed && contact.website && (
+                <p className="evidence-source">Source: {contact.website} · Captured {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p>
+              )}
             </>
           )}
 
@@ -351,8 +362,6 @@ export default function BlueprintExperience() {
               {result.priorities.map((priority, index) => <article key={priority.title}><span>0{index + 1}</span><small>{PILLAR_LABELS[priority.pillar]}</small><h3>{priority.title}</h3><p>{priority.detail}</p></article>)}
             </div>
           )}
-
-          <div className="quick-win"><div><p className="eyebrow">Start this week</p><h2>{result.quickWin.title}</h2></div><p>{result.quickWin.detail}</p></div>
 
           <div className="section-title"><p className="eyebrow dark">Your 90-day plan</p><h2>Now. Next. Then.</h2></div>
           <div className="roadmap-grid">
@@ -377,23 +386,28 @@ export default function BlueprintExperience() {
             </>
           )}
 
-          {aiReport && (
+          {aiReport ? (
             <section className="recommendation-card">
-              <p className="eyebrow dark">How Urban Eye builds this with you</p>
-              <h2>{aiReport.urbanEyeRecommendation.engagement}</h2>
-              <p className="rec-service">Best-fit service: <strong>{aiReport.urbanEyeRecommendation.service}</strong></p>
+              <p className="eyebrow dark">Recommended first project</p>
+              <h2>{aiReport.urbanEyeRecommendation.projectName}</h2>
+              <p className="rec-service">Best-fit service: <strong>{aiReport.urbanEyeRecommendation.service}</strong><span className="rec-duration">{aiReport.urbanEyeRecommendation.duration}</span></p>
+              <p className="rec-outcome">{aiReport.urbanEyeRecommendation.outcome}</p>
               <div className="rec-cols">
-                <div><h4>Scope</h4><ul>{aiReport.urbanEyeRecommendation.scope.map((item) => <li key={item}>{item}</li>)}</ul></div>
-                <div><h4>Deliverables</h4><ul>{aiReport.urbanEyeRecommendation.deliverables.map((item) => <li key={item}>{item}</li>)}</ul></div>
+                <div><h4>Included</h4><ul>{aiReport.urbanEyeRecommendation.included.map((item) => <li key={item}>{item}</li>)}</ul></div>
+                <div><h4>Not included</h4><ul className="not-included">{aiReport.urbanEyeRecommendation.notIncluded.map((item) => <li key={item}>{item}</li>)}</ul></div>
               </div>
-              <p className="first-step"><strong>First step:</strong> {aiReport.urbanEyeRecommendation.firstStep}</p>
+              <p className="first-step">{aiReport.urbanEyeRecommendation.firstStep}</p>
+              <div className="rec-actions">
+                <button className="button button-gold" onClick={downloadPdf}>Download Detailed PDF</button>
+                <a className="button button-dark" href="https://www.urbaneyebybrooks.com/contact.html?project=blueprint">Book a 20-min Blueprint Review →</a>
+              </div>
+            </section>
+          ) : (
+            <section className="implementation-card">
+              <div><p className="eyebrow">How Urban Eye can help</p><h2>{result.implementationOpportunity.title}</h2><p>{result.implementationOpportunity.detail}</p></div>
+              <div className="implementation-actions"><a className="button button-gold" href="https://www.urbaneyebybrooks.com/contact.html?project=blueprint">Review My Plan</a></div>
             </section>
           )}
-
-          <section className="implementation-card">
-            <div><p className="eyebrow">How Urban Eye can help</p><h2>{result.implementationOpportunity.title}</h2><p>{result.implementationOpportunity.detail}</p></div>
-            <div className="implementation-actions"><button className="button button-light" onClick={downloadPdf} disabled={!aiReport}>Download Detailed PDF</button><a className="button button-gold" href="https://www.urbaneyebybrooks.com/contact.html?project=blueprint">Review My Plan</a></div>
-          </section>
 
           {aiReport && (
             <div className="report-fineprint">

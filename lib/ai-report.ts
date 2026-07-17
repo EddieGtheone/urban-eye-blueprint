@@ -50,11 +50,17 @@ export type AiBlueprintReport = {
     startingPoint: string;
     targetDirection: string;
   }>;
+  evidenceLog: Array<{
+    source: 'Reported' | 'Observed' | 'Inferred' | 'Unknown';
+    finding: string;
+  }>;
   urbanEyeRecommendation: {
     service: string;
-    engagement: string;
-    scope: string[];
-    deliverables: string[];
+    projectName: string;
+    outcome: string;
+    included: string[];
+    notIncluded: string[];
+    duration: string;
     firstStep: string;
   };
   assumptions: string[];
@@ -74,7 +80,7 @@ const reportSchema = {
   additionalProperties: false,
   required: [
     'reportTitle', 'reportSubtitle', 'generatedFor', 'executiveSummary', 'companySnapshot',
-    'primaryDiagnosis', 'priorityActions', 'roadmap', 'metrics', 'urbanEyeRecommendation',
+    'primaryDiagnosis', 'evidenceLog', 'priorityActions', 'roadmap', 'metrics', 'urbanEyeRecommendation',
     'assumptions', 'disclaimer'
   ],
   properties: {
@@ -145,14 +151,27 @@ const reportSchema = {
         }
       }
     },
+    evidenceLog: {
+      type: 'array', minItems: 4, maxItems: 8,
+      items: {
+        type: 'object', additionalProperties: false,
+        required: ['source', 'finding'],
+        properties: {
+          source: { type: 'string', enum: ['Reported', 'Observed', 'Inferred', 'Unknown'] },
+          finding: { type: 'string' }
+        }
+      }
+    },
     urbanEyeRecommendation: {
       type: 'object', additionalProperties: false,
-      required: ['service', 'engagement', 'scope', 'deliverables', 'firstStep'],
+      required: ['service', 'projectName', 'outcome', 'included', 'notIncluded', 'duration', 'firstStep'],
       properties: {
         service: { type: 'string' },
-        engagement: { type: 'string' },
-        scope: { type: 'array', minItems: 3, maxItems: 5, items: { type: 'string' } },
-        deliverables: { type: 'array', minItems: 3, maxItems: 5, items: { type: 'string' } },
+        projectName: { type: 'string' },
+        outcome: { type: 'string' },
+        included: { type: 'array', minItems: 4, maxItems: 7, items: { type: 'string' } },
+        notIncluded: { type: 'array', minItems: 2, maxItems: 4, items: { type: 'string' } },
+        duration: { type: 'string' },
         firstStep: { type: 'string' }
       }
     },
@@ -220,6 +239,31 @@ export function buildFallbackAiReport(
     timeframe: index === 0 ? 'Start in the next 30 days' : index === 1 ? 'Kick off by day 45' : 'Land it by day 90'
   }));
 
+  const evidenceLog: AiBlueprintReport['evidenceLog'] = [
+    { source: 'Reported', finding: `Your goal for the next 90 days: ${answerLabel('primary_goal', answers.primary_goal)}.` },
+    { source: 'Reported', finding: `How leads reach you today: ${answerLabel('lead_capture', answers.lead_capture)}.` },
+    { source: 'Reported', finding: `What happens after someone shows interest: ${answerLabel('follow_up', answers.follow_up)}.` },
+    { source: 'Reported', finding: `You described your website as: ${answerLabel('website_state', answers.website_state)}.` }
+  ];
+  if (['products', 'hybrid'].includes(answers.business_model)) {
+    evidenceLog.push({ source: 'Reported', finding: `Catalog size ${answerLabel('sku_count', answers.sku_count)}, with product data rated "${answerLabel('catalog_quality', answers.catalog_quality)}".` });
+  }
+  if (snapshot) {
+    if (snapshot.title) evidenceLog.push({ source: 'Observed', finding: `Your homepage leads with "${snapshot.title}".` });
+    if (snapshot.headings.length) evidenceLog.push({ source: 'Observed', finding: `The page emphasizes: ${snapshot.headings.slice(0, 3).join('; ')}.` });
+  } else {
+    evidenceLog.push({ source: 'Unknown', finding: 'We could not review your public website this time — an easy thing to look at together.' });
+  }
+  evidenceLog.push({ source: 'Inferred', finding: `${PILLAR_LABELS[result.primaryPillar]} is your clearest place to start, based on how your answers scored.` });
+  evidenceLog.push({ source: 'Unknown', finding: 'Your analytics, lead-routing rules, and internal tools were not reviewed yet — checking them would sharpen this further.' });
+
+  const projectNames: Record<string, string> = {
+    website: 'Website Modernization Sprint',
+    commerce: 'Catalog & Buying Experience Sprint',
+    marketing: 'Lead Response & Follow-Up Sprint',
+    technology: 'Operations & Automation Sprint'
+  };
+
   return {
     reportTitle: `${contact.company} 90-Day Business Plan`,
     reportSubtitle: 'Your clearest next move, the momentum it unlocks, and exactly where to begin.',
@@ -255,17 +299,23 @@ export function buildFallbackAiReport(
       { name: 'Hours you get back each week', whyItMatters: 'Every hour spent on repetitive busywork is an hour not spent growing — this is time you can win back.', startingPoint: 'Ballpark the hours the team loses to repeat work now.', targetDirection: 'Less doing the same thing twice, more moving the business forward.' },
       { name: result.primaryPillar === 'commerce' ? 'How easy your products are to trust and buy' : 'Your headline 90-day win', whyItMatters: 'Keeps the whole effort pointed at a result you can actually see and feel.', startingPoint: result.primaryPillar === 'commerce' ? 'Look at how many products have the clear info and images buyers expect.' : 'Pick one number that matters — leads, sales, or time saved — and mark where you stand.', targetDirection: 'Steady, visible improvement every time you check in.' }
     ],
+    evidenceLog: evidenceLog.slice(0, 8),
     urbanEyeRecommendation: {
       service: result.servicePath,
-      engagement: result.implementationOpportunity.title,
-      scope: [result.implementationOpportunity.detail, ...result.priorities.slice(0, 2).map((priority) => priority.detail)].slice(0, 5),
-      deliverables: [
-        'Current-state review and prioritized implementation scope',
-        'Approved content, data, workflow, or technical requirements',
-        'Built and tested first-phase solution',
-        'Launch checklist and measurement plan'
+      projectName: projectNames[result.primaryPillar] || `${PILLAR_LABELS[result.primaryPillar]} Sprint`,
+      outcome: `A focused first project that turns your ${PILLAR_LABELS[result.primaryPillar].toLowerCase()} priority into something real — clear ownership, a working solution, and a way to see it paying off.`,
+      included: [
+        `A quick review of where your ${PILLAR_LABELS[result.primaryPillar].toLowerCase()} stands today`,
+        result.implementationOpportunity.detail,
+        ...result.priorities.slice(0, 2).map((priority) => priority.detail),
+        'A simple way to measure the result so you can feel the difference'
+      ].slice(0, 6),
+      notIncluded: [
+        'A full rebuild of everything at once — we start where it matters most',
+        'Long-term retainers or big commitments before you see value'
       ],
-      firstStep: `Bring this plan to Urban Eye and let's map out your first ${PILLAR_LABELS[result.primaryPillar].toLowerCase()} win together — who owns it, what it looks like, and how we get there in the first 30 days.`
+      duration: '2–3 weeks',
+      firstStep: 'Book a 20-minute Blueprint Review with Urban Eye and we will map your first win together.'
     },
     assumptions: [
       'This plan is built from your answers and a quick look at your public homepage — the more we learn together, the sharper it gets.',
@@ -325,6 +375,10 @@ export async function generateAiBlueprintReport(
         "Stay in the owner's language. Turn anything technical into what it means for their customers, their reputation, their time, and their money. No jargon, no system-speak.",
         "Do not include prices, and do not make legal, financial, security, accessibility, or compliance guarantees.",
         "Website observations must trace to the supplied snapshot, and should gently note that only the public homepage was reviewed.",
+        "Make the headline (primaryDiagnosis.headline) specific to THIS company and its exact failure point — name the company and the concrete gap, not a generic phrase that could fit any business. Prefer something falsifiable, e.g. 'Acme is losing leads between inquiry and follow-up,' over 'Leads are slipping through.'",
+        "Fill evidenceLog with 4-8 concrete findings, each honestly labeled by source: 'Reported' for anything the questionnaire stated, 'Observed' for anything visible on the public homepage snapshot, 'Inferred' for your interpretation of that evidence, and 'Unknown' for things that would need analytics or internal access to confirm. Never label an inference as reported or observed — this is how the reader learns to trust the report.",
+        "Be adaptive, not uniform. Deeply expand only the highest-scoring pillar, plus the second-highest when it is within about 15-20 points of the top; treat those as one connected story (primary bottleneck and supporting bottleneck). Give every other pillar just a sentence, and for clearly low-scoring pillars say plainly that it is not a current constraint and is not part of the first 90 days.",
+        "Make urbanEyeRecommendation a specific, named first project (projectName), not a service category: a concrete outcome, a clear 'included' list, an honest 'notIncluded' list that sets expectations, a realistic duration, and a firstStep CTA that states the action and the time commitment (a short Blueprint Review).",
         "Make it substantial and genuinely useful, but never repeat the same point across sections. Every line should earn its place and pull them one step closer to working with Urban Eye."
       ].join('\n'),
       input: JSON.stringify(promptPayload(contact, answers, result, snapshot)),

@@ -29,6 +29,7 @@ export function createBlueprintPdf({ contact, result, aiReport, submissionId }: 
   const pageHeight = pdf.internal.pageSize.getHeight();
   const margin = 54;
   const contentWidth = pageWidth - margin * 2;
+  const snapshotUrl = (contact.website || '').trim();
   let y = 54;
 
   const addPage = () => {
@@ -150,6 +151,12 @@ export function createBlueprintPdf({ contact, result, aiReport, submissionId }: 
   addText('Public website observations', 11, 'bold', 8);
   addBullets(aiReport.companySnapshot.websiteObservations);
 
+  addSection('What we saw', 'The evidence behind this plan');
+  aiReport.evidenceLog.forEach((item) => {
+    addText(`${item.source} — ${item.finding}`, 9.7, 'normal', 6);
+  });
+  if (snapshotUrl) addText(`Source: ${snapshotUrl} · Captured ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, 8.5, 'normal', 14);
+
   ensureSpace(72 + pillarOrder.length * 39);
   addSection('Priority scores', 'Where attention is needed');
   pillarOrder.forEach((pillar) => {
@@ -212,14 +219,16 @@ export function createBlueprintPdf({ contact, result, aiReport, submissionId }: 
   });
 
   addPage();
-  addSection('Urban Eye recommendation', aiReport.urbanEyeRecommendation.engagement);
-  addText(`Recommended service: ${aiReport.urbanEyeRecommendation.service}`, 11, 'bold', 12);
-  addText('Suggested scope', 11, 'bold', 8);
-  addBullets(aiReport.urbanEyeRecommendation.scope);
-  addText('Expected deliverables', 11, 'bold', 8);
-  addBullets(aiReport.urbanEyeRecommendation.deliverables);
-  addCallout('First step', aiReport.urbanEyeRecommendation.firstStep);
-  addText('Review this plan with Urban Eye at urbaneyebybrooks.com.', 10.5, 'bold', 18);
+  addSection('Recommended first project', aiReport.urbanEyeRecommendation.projectName);
+  addText(`Best-fit service: ${aiReport.urbanEyeRecommendation.service}`, 11, 'bold', 8);
+  addText(aiReport.urbanEyeRecommendation.outcome, 11, 'normal', 14);
+  addText('Included', 11, 'bold', 8);
+  addBullets(aiReport.urbanEyeRecommendation.included);
+  addText('Not included', 11, 'bold', 8);
+  addBullets(aiReport.urbanEyeRecommendation.notIncluded);
+  addText(`Estimated duration: ${aiReport.urbanEyeRecommendation.duration}`, 10.5, 'bold', 12);
+  addCallout('Next step', aiReport.urbanEyeRecommendation.firstStep);
+  addText('Book your Blueprint Review with Urban Eye at urbaneyebybrooks.com.', 10.5, 'bold', 18);
 
   addSection('Assumptions', 'What should be validated');
   addBullets(aiReport.assumptions, 9.4, 5);
